@@ -17,11 +17,11 @@ assert(Scan.Transform,"Transform not available, check capability of connected de
 -- Create the filter
 particleFilter = Scan.ParticleFilter.create()
 assert(particleFilter, "ParticleFiler could not be created")
-Scan.ParticleFilter.setThreshold(particleFilter,100.0) -- If the distance difference in distsances 
-                                                       -- between of a point and its neighbours exceeds 
+Scan.ParticleFilter.setThreshold(particleFilter,100.0) -- If the distance difference in distsances
+                                                       -- between of a point and its neighbours exceeds
                                                        -- this threshold it is discarded as a particle
 Scan.ParticleFilter.setEnabled(particleFilter,true)
-  
+
 -- Create a viewer instance
 viewer = View.create()
 assert(viewer, "View could not be created.")
@@ -40,7 +40,7 @@ Scan.Provider.File.setFile(provider, SCAN_FILE_PATH)
 -- Set the DataSet of the recorded data which should be used.
 Scan.Provider.File.setDataSetID(provider, 1)
 
---End of Global Scope----------------------------------------------------------- 
+--End of Global Scope-----------------------------------------------------------
 
 --Start of Function and Event Scope---------------------------------------------
 
@@ -48,15 +48,15 @@ Scan.Provider.File.setDataSetID(provider, 1)
 -- Compares the distances of two scans of the specified echo
 -------------------------------------------------------------------------------------------------------
 local function compareScans(inputScan, filteredScan, iEcho, printDetails)
-  
+
   -- get the beam and echo counts
   local beamCountInput = Scan.getBeamCount(inputScan)
   local echoCountInput = Scan.getEchoCount(inputScan)
   local beamCountFiltered = Scan.getBeamCount(filteredScan)
   local echoCountFiltered = Scan.getEchoCount(filteredScan)
-  
+
   local particleCount = 0
-  
+
   -- Checks
   if ( iEcho <= echoCountInput and iEcho <= echoCountFiltered ) then
     if ( beamCountInput == beamCountFiltered ) then
@@ -83,11 +83,11 @@ local function compareScans(inputScan, filteredScan, iEcho, printDetails)
   return particleCount
 end
 
--- Callback function to process new scans
+---Callback function to process new scans
 function handleNewScan(scan)
   counter = counter+1
   print("Scan: ", counter, "  beams: ", Scan.getBeamCount(scan));
-  
+
   -- Save current scan and
   previousScan = currentScan
   -- clone input scan
@@ -95,7 +95,7 @@ function handleNewScan(scan)
 
   -- Filter scan
   local filteredScan = Scan.ParticleFilter.filter(particleFilter, scan)
-  
+
   -- Note: Scan 1 and 2 are never returned since the filter needs a history of 2 scans.
   if ( nil ~= filteredScan ) then
     -- Transform to PointCloud to view in the PointCloud viewer on the webpage
@@ -113,6 +113,6 @@ function handleNewScan(scan)
     end
   end
 end
--- Register callback function to "OnNewScan" event. 
+-- Register callback function to "OnNewScan" event.
 -- This call also starts the playback of scans
 Scan.Provider.File.register(provider, "OnNewScan", "handleNewScan")
